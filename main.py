@@ -2,53 +2,92 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Simulate some data
-data = pd.DataFrame({
-    "Company": ["Toyota", "Honda", "Ford", "Chevrolet", "Tesla"],
-    "Car Type": ["Sedan", "SUV", "Truck", "Coupe", "Electric"],
-    "FE Score": [85, 90, 75, 80, 95],
-    "Time": ["2023 Q1", "2023 Q2", "2023 Q3", "2023 Q4", "2024 Q1"]
-})
+# Load the dataset
+data = pd.read_csv('filtered_file.csv')
 
-# App title
-st.markdown(
-    "<h1 style='text-align: left; color: black; background-color: #d3d3d3;'>Toyota</h1>",
-    unsafe_allow_html=True,
-)
+# Sidebar for navigation
+st.sidebar.title("Navigation")
+page = st.sidebar.radio("Go to", ["Home", "Comparison"])
 
-# Layout: Filters and Graph side by side
-col1, col2 = st.columns([1, 3])
+if page == "Home":
+    # Home Page
+    st.title("Welcome to the Fuel Economy Score App")
+    st.write("""
+        This app provides insights into fuel economy scores for Toyota and Kia vehicles.
+        Use the Comparison page to explore detailed data and visualizations.
+    """)
 
-# Filters in the first column
-with col1:
-    st.markdown("### Filters")
 
-    # Company filter
-    selected_company = st.selectbox("Company", options=data["Company"].unique())
+    import streamlit as st
+    src="https://us-east-1.quicksight.aws.amazon.com/sn/embed/share/accounts/535002864024/dashboards/ab747687-3a21-46e0-ad9c-e0d2ffc2e7d9?directory_alias=535002864024"
+    quicksight_embed_url = "https://example-quicksight-dashboard-url"
+    st.components.v1.html(
+        f'<iframe src="{src}" width="100%" height="600"></iframe>',
+        height=600
+    )
 
-    # Car Type filter
-    selected_car_type = st.selectbox("Car Type", options=data["Car Type"].unique())
+    # Add any additional content for the Home page here
+    st.write("You can include more information or visuals here for the Home page.")
 
-    # Apply button
-    if st.button("Apply"):
-        st.success("Filters applied!")
+elif page == "Comparison":
+    # Comparison Page
+    st.title("Fuel Economy Comparison")
+    
+    # Filters
+    st.write("### Filter Options")
+    col1, col2 = st.columns(2)
+    with col1:
+        make1 = st.selectbox('Select Make 1', data['make'].unique())
+        VClass1 = st.selectbox('Select Vehicle Class 1', data['VClass'].unique())
+    with col2:
+        make2 = st.selectbox('Select Make 2', data['make'].unique())
+        VClass2 = st.selectbox('Select Vehicle Class 2', data['VClass'].unique())
 
-# Graph in the second column
-with col2:
-    st.markdown("### FE Score Over Time")
+    # Filter the data based on selections
+    toyota_data = data[data['make'] == make1]
+    kia_data = data[data['make'] == make2]
 
-    # Filter the data based on user input
-    filtered_data = data[
-        (data["Company"] == selected_company) & (data["Car Type"] == selected_car_type)
-    ]
+    compact_cars_toyota = toyota_data[toyota_data['VClass'] == VClass1]
+    final_table_toyota_compact_cars = compact_cars_toyota.groupby('year').agg({'feScore': 'mean'})
 
-    # Create the graph
-    if not filtered_data.empty:
-        fig, ax = plt.subplots()
-        ax.plot(filtered_data["Time"], filtered_data["FE Score"], marker="o", color="red")
-        ax.set_xlabel("Time")
-        ax.set_ylabel("FE Score")
-        ax.set_title(f"FE Score Trend for {selected_company} ({selected_car_type})")
-        st.pyplot(fig)
-    else:
-        st.warning("No data available for the selected filters.")
+    compact_cars_kia = kia_data[kia_data['VClass'] == VClass2]
+    final_table_kia_compact_cars = compact_cars_kia.groupby('year').agg({'feScore': 'mean'})
+
+    avg_fe_score = data[data['VClass'] == 'Compact Cars'].groupby('year').agg({'feScore': 'mean'})
+
+    # Display Data
+    st.write("### Data Overview")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.write(f"**{make1} Data**")
+        st.write(toyota_data)
+    with col2:
+        st.write(f"**{make2} Data**")
+        st.write(kia_data)
+
+    st.write("### Aggregated Data")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.write(f"**{make1} ({VClass1}) Aggregated by Year**")
+        st.write(final_table_toyota_compact_cars)
+    with col2:
+        st.write(f"**{make2} ({VClass2}) Aggregated by Year**")
+        st.write(final_table_kia_compact_cars)
+
+    st.write("### Average Fuel Economy for Compact Cars Across All Makes")
+    st.write(avg_fe_score)
+
+    # Plotting
+    fig, ax = plt.subplots()
+    ax.plot(final_table_kia_compact_cars.index, final_table_kia_compact_cars['feScore'], marker='o', linestyle='-', label=make2)
+    ax.plot(final_table_toyota_compact_cars.index, final_table_toyota_compact_cars['feScore'], marker='o', linestyle='-', label=make1)
+    ax.plot(avg_fe_score.index, avg_fe_score['feScore'], color='red', linestyle='--', label='Average Fuel Economy Score')
+    ax.set_title('Average Fuel Economy Score by Year for Selected Makes and Vehicle Classes')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Average Fuel Economy Score')
+    ax.set_xticks(range(2021, 2026))
+    ax.set_yticks(range(0, 11))
+    ax.legend()
+
+    # Display Plot
+    st.pyplot(fig)
