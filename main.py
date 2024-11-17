@@ -1,17 +1,17 @@
 import streamlit as st
-from home import home_page
-from comparison import comparison_page
-from analysis2 import analysis_page
-from an import create_pygwalker_viz
-
-
-
 st.set_page_config(
     page_title="US Population Dashboard",
     page_icon="🏂",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
+from home import home_page
+from comparison import comparison_page
+from analysis2 import analysis_page
+from an import create_pygwalker_viz
+from llm_page import llm_page  # Import the new LLM page
+
+
 
 
 st.markdown(
@@ -31,14 +31,19 @@ st.markdown(
 
 # Sidebar for navigation
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Go to", ["Home", "Comparison", "Analysis", "Customizable Data"])
+page = st.sidebar.radio(
+    "Go to",
+    ["Home", "Comparison", "Analysis", "Customizable Data", "LLM Page"]
+)
 
 # Page routing
 if page == "Home":
-    home_page()  # Call the function from home.py
+    home_page()
 elif page == "Comparison":
-    comparison_page()  # Call the function from comparison.py
+    comparison_page()
 elif page == "Analysis":
-    analysis_page()  # Call the function from analysis.py
+    analysis_page()
 elif page == "Customizable Data":
-    create_pygwalker_viz()  # Call the function from analysis.py
+    create_pygwalker_viz()
+elif page == "LLM Page":
+    llm_page()  

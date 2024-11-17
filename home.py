@@ -3,12 +3,6 @@ import pandas as pd
 import altair as alt
 
 
-# st.set_page_config(
-#     page_title="US Population Dashboard",
-#     page_icon="🏂",
-#     layout="wide",
-#     initial_sidebar_state="collapsed",
-# )
 
 # Modular functions for HTML and CSS designs
 def styled_box_with_chart(title, chart, background_gradient="linear-gradient(135deg, #7a0000, #280000)", text_color="white"):
@@ -245,11 +239,11 @@ def home_page():
     with col3:
     # Add space for alignment
         st.write(" ")  # Spacer
-        st.markdown("<div style='margin-left: 50px;'>", unsafe_allow_html=True)  # Add left margin
+        st.markdown("<div style='margin-left: 20px;'>", unsafe_allow_html=True)  # Add left margin
         st.image(
             "./Toyota Supra.png",
             caption="Toyota",
-            width=500  # Adjust width as needed
+            width=450  # Adjust width as needed
         )
         st.markdown("</div>", unsafe_allow_html=True)  # Close the div
 
