@@ -46,26 +46,31 @@ def different_models():
     return len(toyota_data['model'].unique())
 
 
-
 def fe_score_chart():
-    data = pd.read_csv('filtered_file.csv')
-    
+    # Dropdown to select grouping column
+    m1 = st.selectbox('Group by', ['assumed_VClass', 'model'])
+
+    # Load the dataset
+    data = pd.read_csv('updated_file.csv')
     toyota_data = data[data['make'] == 'Toyota']
+
+    # Filter data for years 2021 to 2025
     years_of_interest = [2021, 2022, 2023, 2024, 2025]
-    fe_score_data = toyota_data[toyota_data['year'].isin(years_of_interest)][['VClass', 'year', 'feScore']]
-    
-    fe_score_table = fe_score_data.groupby(['VClass', 'year']).mean().reset_index()
+    fe_score_data = toyota_data[toyota_data['year'].isin(years_of_interest)][[m1, 'year', 'feScore']]
+
+    # Group by selected column and year
+    fe_score_table = fe_score_data.groupby([m1, 'year']).mean().reset_index()
 
     # Create Altair line chart
     line_chart = alt.Chart(fe_score_table).mark_line(point=True).encode(
         x=alt.X('year:O', title='Year', axis=alt.Axis(format='d')),
         y=alt.Y('feScore:Q', title='feScore', scale=alt.Scale(domain=[0, 10])),
-        color=alt.Color('VClass:N', legend=alt.Legend(title="VClass")),
-        tooltip=['VClass', 'year', 'feScore']
+        color=alt.Color(f'{m1}:N', legend=alt.Legend(title=m1)),  # Dynamically set color based on m1
+        tooltip=[m1, 'year', 'feScore']
     ).properties(
         width=700,
         height=400,
-        title=""
+        title=f"Average feScore by {m1.capitalize()} (2021-2025)"
     )
 
     return line_chart
@@ -73,11 +78,10 @@ def fe_score_chart():
 
 # Main app functions
 def home_page():
-    
     st.title("Toyota Vehicle Dashboard")
 
     # Layout for styled columns
-    col1, col2 = st.columns((1, 2))
+    col1, col2, col3 = st.columns((1, 1, 2))
     with col1:
         st.markdown(
             f"""
@@ -111,7 +115,7 @@ def home_page():
             """,
             unsafe_allow_html=True
         )
-    with col2:
+    with col3:
         styled_box_with_chart("Average Fuel Economy Score", fe_score_chart())
 
 
