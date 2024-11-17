@@ -20,4 +20,4 @@ def create_pygwalker_viz():
     st.components.v1.html(walker.to_html(), height=800, scrolling=True)
 
 
-create_pygwalker_viz()
+
