@@ -1,10 +1,29 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import requests
+from io import StringIO
 
 def comparison_page():
-    # Load the dataset
-    data = pd.read_csv('filtered_file.csv')
+    # Pinata IPFS CID and gateway URL
+    ipfs_cid = "QmYnTwnx1oZxrt7QSWdqmTqquBFNAHPwpXTuQuke65nP41"  # Replace with your actual CID
+    ipfs_url = f"https://gateway.pinata.cloud/ipfs/{ipfs_cid}"
+
+    # Fetch the data from IPFS
+    @st.cache_data
+    def fetch_data_from_ipfs(url):
+        response = requests.get(url)
+        if response.status_code == 200:
+            csv_data = StringIO(response.text)
+            return pd.read_csv(csv_data)
+        else:
+            st.error("Failed to fetch data from IPFS. Check the CID and URL.")
+            return pd.DataFrame()  # Return empty DataFrame if fetch fails
+
+    # Load data
+    data = fetch_data_from_ipfs(ipfs_url)
+    if data.empty:
+        st.stop()  # Stop execution if the data could not be loaded
 
     st.title("Fuel Economy Comparison")
     
@@ -30,27 +49,27 @@ def comparison_page():
 
     avg_fe_score = data[data['VClass'] == 'Compact Cars'].groupby('year').agg({'feScore': 'mean'})
 
-    # Display Data
-    st.write("### Data Overview")
-    col1, col2 = st.columns(2)
-    with col1:
-        st.write(f"**{make1} Data**")
-        st.write(toyota_data)
-    with col2:
-        st.write(f"**{make2} Data**")
-        st.write(kia_data)
+    # # Display Data
+    # st.write("### Data Overview")
+    # col1, col2 = st.columns(2)
+    # with col1:
+    #     st.write(f"**{make1} Data**")
+    #     st.write(toyota_data)
+    # with col2:
+    #     st.write(f"**{make2} Data**")
+    #     st.write(kia_data)
 
-    st.write("### Aggregated Data")
-    col1, col2 = st.columns(2)
-    with col1:
-        st.write(f"**{make1} ({VClass1}) Aggregated by Year**")
-        st.write(final_table_toyota_compact_cars)
-    with col2:
-        st.write(f"**{make2} ({VClass2}) Aggregated by Year**")
-        st.write(final_table_kia_compact_cars)
+    # st.write("### Aggregated Data")
+    # col1, col2 = st.columns(2)
+    # with col1:
+    #     st.write(f"**{make1} ({VClass1}) Aggregated by Year**")
+    #     st.write(final_table_toyota_compact_cars)
+    # with col2:
+    #     st.write(f"**{make2} ({VClass2}) Aggregated by Year**")
+    #     st.write(final_table_kia_compact_cars)
 
-    st.write("### Average Fuel Economy for Compact Cars Across All Makes")
-    st.write(avg_fe_score)
+    # st.write("### Average Fuel Economy for Compact Cars Across All Makes")
+    # st.write(avg_fe_score)
 
     # Plotting
     fig, ax = plt.subplots()
