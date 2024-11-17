@@ -6,7 +6,7 @@ from io import StringIO
 
 def comparison_page():
     # Pinata IPFS CID and gateway URL
-    ipfs_cid = "QmYnTwnx1oZxrt7QSWdqmTqquBFNAHPwpXTuQuke65nP41"  # Replace with your actual CID
+    ipfs_cid = "Qmaq97iYXo48jgCkHWCfYRWA7L1tfCX2JXvR71y8wnVRAh"  # Replace with your actual CID
     ipfs_url = f"https://gateway.pinata.cloud/ipfs/{ipfs_cid}"
 
     # Fetch the data from IPFS
@@ -32,10 +32,10 @@ def comparison_page():
     col1, col2 = st.columns(2)
     with col1:
         make1 = st.selectbox('Select Make 1', data['make'].unique())
-        VClass1 = st.selectbox('Select Vehicle Class 1', data['VClass'].unique())
+        VClass1 = st.selectbox('Select Vehicle Class 1', data['assumed_VClass'].unique())
     with col2:
         make2 = st.selectbox('Select Make 2', data['make'].unique())
-        VClass2 = st.selectbox('Select Vehicle Class 2', data['VClass'].unique())
+        VClass2 = st.selectbox('Select Vehicle Class 2', data['assumed_VClass'].unique())
 
     # Filter the data based on selections
     toyota_data = data[data['make'] == make1]
