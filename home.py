@@ -3,12 +3,12 @@ import pandas as pd
 import altair as alt
 
 
-st.set_page_config(
-    page_title="US Population Dashboard",
-    page_icon="🏂",
-    layout="wide",
-    initial_sidebar_state="collapsed",
-)
+# st.set_page_config(
+#     page_title="US Population Dashboard",
+#     page_icon="🏂",
+#     layout="wide",
+#     initial_sidebar_state="collapsed",
+# )
 
 # Modular functions for HTML and CSS designs
 def styled_box_with_chart(title, chart, background_gradient="linear-gradient(135deg, #03233b, #143255)", text_color="white"):
@@ -177,7 +177,7 @@ def home_page():
 
     st.title("Toyota Vehicle Dashboard")
     m1 = st.selectbox('Group by', ['assumed_VClass', 'baseModel'])
-    data = pd.read_csv('/Users/rujvi/Documents/hackUTD3_2024/hackUTD_24/updatedFile.csv')
+    data = pd.read_csv('./updated_file.csv')
     st.write(data.head())
 
     # Layout for styled columns

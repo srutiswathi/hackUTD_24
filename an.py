@@ -12,7 +12,7 @@ st.set_page_config(
 
 def create_pygwalker_viz():
     # Load the CSV file
-    df = pd.read_csv('/Users/rujvi/Documents/hackUTD3_2024/hackUTD_24/updatedFile.csv')
+    df = pd.read_csv('./updated_file.csv')
 
     # Create the Pygwalker visualization
     walker = pyg.walk(df, spec="./gw_config.json")
