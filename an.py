@@ -2,14 +2,6 @@ import streamlit as st
 import pandas as pd
 import pygwalker as pyg
 
-
-st.set_page_config(
-    page_title="US Population Dashboard",
-    page_icon="🏂",
-    layout="wide",
-    initial_sidebar_state="collapsed",
-)
-
 def create_pygwalker_viz():
     # Load the CSV file
     df = pd.read_csv('./updated_file.csv')
