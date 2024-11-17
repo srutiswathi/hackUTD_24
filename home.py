@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
-
+import requests
+from io import StringIO
 
 
 # Modular functions for HTML and CSS designs
@@ -35,10 +36,34 @@ def styled_box_with_chart(title, chart, background_gradient="linear-gradient(135
     st.altair_chart(chart, use_container_width=True)
 
 
+@st.cache_data
+def fetch_data_from_pinata(cid):
+    """
+    Fetches the CSV file from Pinata using the given CID.
+    Args:
+        cid (str): CID of the file stored in Pinata.
+    Returns:
+        pd.DataFrame: The loaded DataFrame from the CSV file.
+    """
+    ipfs_url = f"https://gateway.pinata.cloud/ipfs/{cid}"
+    response = requests.get(ipfs_url)
+    if response.status_code == 200:
+        csv_data = StringIO(response.text)
+        return pd.read_csv(csv_data)
+    else:
+        st.error("Failed to fetch data from Pinata. Check the CID and URL.")
+        return pd.DataFrame()
+
+
 def total_cars():
-    data = pd.read_csv('./filtered_file.csv')
+    # Replace 'filtered_file_cid' with your Pinata CID
+    filtered_file_cid = "Qmaq97iYXo48jgCkHWCfYRWA7L1tfCX2JXvR71y8wnVRAh"
+    data = fetch_data_from_pinata(filtered_file_cid)
+    if data.empty:
+        return 0  # Handle empty data gracefully
     toyota_data = data[data['make'] == 'Toyota']
     return len(toyota_data)
+
 
 
 def different_models(m1, data):
@@ -169,10 +194,20 @@ def home_page():
         unsafe_allow_html=True
 )
 
+    
+
+    # Pinata CID for the updated_file
+    updated_file_cid = "Qmaq97iYXo48jgCkHWCfYRWA7L1tfCX2JXvR71y8wnVRAh"
 
     st.title("Toyota Vehicle Dashboard")
     m1 = st.selectbox('Group by', ['assumed_VClass', 'baseModel'])
-    data = pd.read_csv('./updated_file.csv')
+
+    # Fetch data from Pinata
+    data = fetch_data_from_pinata(updated_file_cid)
+    if data.empty:
+        st.error("No data available. Please check the CID or data source.")
+        st.stop()
+
     st.write(data.head())
 
     # Layout for styled columns
