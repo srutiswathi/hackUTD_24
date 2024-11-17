@@ -13,6 +13,22 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
+
+st.markdown(
+    """
+    <style>
+    body {
+        background: linear-gradient(195deg, #000000, #f32929); /* Gradient background */
+        color: white;
+    }
+    .stApp {
+        background: linear-gradient(185deg, #000000, #f32929); /* Gradient for the app background */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # Sidebar for navigation
 st.sidebar.title("Navigation")
 page = st.sidebar.radio("Go to", ["Home", "Comparison", "Analysis", "Customizable Data"])
