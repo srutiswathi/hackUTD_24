@@ -10,7 +10,7 @@ from comparison import comparison_page
 from analysis2 import analysis_page
 from an import create_pygwalker_viz
 from llm_page import llm_page  # Import the new LLM page
-
+from openai import OpenAI
 
 
 # Sidebar for navigation

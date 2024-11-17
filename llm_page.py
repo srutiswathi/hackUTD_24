@@ -1,4 +1,5 @@
 import streamlit as st
+import openai
 from LLM import load_csv, generate_embeddings, search, query_llm  # Import necessary functions from LLM.py
 
 def llm_page():
