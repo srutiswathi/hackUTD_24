@@ -40,18 +40,21 @@ def total_cars():
     return len(toyota_data)
 
 
-def different_models():
-    data = pd.read_csv('filtered_file.csv')
+def different_models(m1, data):
+
     toyota_data = data[data['make'] == 'Toyota']
-    return len(toyota_data['model'].unique())
+    return len(toyota_data[m1].unique())
+
+def model_or_class(m1):
+
+    return str(m1)
 
 
-def fe_score_chart():
+def fe_score_chart(m1, data):
     # Dropdown to select grouping column
-    m1 = st.selectbox('Group by', ['assumed_VClass', 'model'])
 
     # Load the dataset
-    data = pd.read_csv('updated_file.csv')
+
     toyota_data = data[data['make'] == 'Toyota']
 
     # Filter data for years 2021 to 2025
@@ -79,6 +82,8 @@ def fe_score_chart():
 # Main app functions
 def home_page():
     st.title("Toyota Vehicle Dashboard")
+    m1 = st.selectbox('Group by', ['assumed_VClass', 'model'])
+    data = pd.read_csv('updated_file.csv')
 
     # Layout for styled columns
     col1, col2, col3 = st.columns((1, 1, 2))
@@ -109,14 +114,14 @@ def home_page():
                 border-radius: 8px;
                 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
                 margin-bottom: 20px;">
-                <h3>Different Models</h3>
-                <p style='font-size: 24px; font-weight: bold;'>{different_models()}</p>
+                <h3>Different {model_or_class(m1)}</h3>
+                <p style='font-size: 24px; font-weight: bold;'>{different_models(m1, data)}</p>
             </div>
             """,
             unsafe_allow_html=True
         )
     with col3:
-        styled_box_with_chart("Average Fuel Economy Score", fe_score_chart())
+        styled_box_with_chart("Average Fuel Economy Score", fe_score_chart(m1, data))
 
 
 # Run the app
