@@ -42,7 +42,7 @@ def styled_box_with_chart(title, chart, background_gradient="linear-gradient(135
 
 
 def total_cars():
-    data = pd.read_csv('/Users/rujvi/Documents/hackUTD3_2024/hackUTD_24/filtered_file.csv')
+    data = pd.read_csv('./filtered_file.csv')
     toyota_data = data[data['make'] == 'Toyota']
     return len(toyota_data)
 
@@ -246,7 +246,7 @@ def home_page():
         st.write(" ")  # Spacer
         st.markdown("<div style='margin-left: 50px;'>", unsafe_allow_html=True)  # Add left margin
         st.image(
-            "/Users/rujvi/Documents/hackUTD3_2024/hackUTD_24/Toyota Supra.png",
+            "./Toyota Supra.png",
             caption="Toyota",
             width=500  # Adjust width as needed
         )
