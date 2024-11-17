@@ -61,6 +61,29 @@ def comparison_page():
     col = st.columns((2, 2))
     subcol = col[0].columns((1, 1))
 
+    groups = {
+        "Sustainability": {
+            "columns": ['co2', 'ghgScore', 'fuelType1', 'fuelType2'],
+            "weights": {'co2': 0.5, 'ghgScore': 0.4, 'fuelType1': 0.05, 'fuelType2': 0.05}
+        },
+        "Performance": {
+            "columns": ['cylinders', 'displ', 'drive', 'trany'],
+            "weights": {'cylinders': 0.4, 'displ': 0.4, 'drive': 0.1, 'trany': 0.1}
+        },
+        "Economy": {
+            "columns": ['comb08', 'barrels08', 'fuelCost08'],
+            "weights": {'comb08': 0.5, 'barrels08': 0.3, 'fuelCost08': 0.2}
+        },
+        "Mileage": {
+            "columns": ['comb08', 'range', 'barrels08'],
+            "weights": {'comb08': 0.4, 'range': 0.4, 'barrels08': 0.2}
+        },
+        "Cost": {
+            "columns": ['fuelCost08', 'fuelCostA08', 'youSaveSpend'],
+            "weights": {'fuelCost08': 0.4, 'fuelCostA08': 0.4, 'youSaveSpend': 0.2}
+        }
+    }
+
 
     with col[0]:
         with subcol[0]:
@@ -124,33 +147,98 @@ def comparison_page():
             #     pie_chart(data, make1, make2, VClass1, VClass2)
             #     st.markdown('</div>', unsafe_allow_html=True)
 
-    with col[0]:
-        
-        st.markdown(
-            f"""
-            <div style="
-                background: linear-gradient(135deg, #393939, #1a1a1a);
-                color: white;
-                height: 100%;
-                text-align: center;
-                padding: 20px;
-                border-radius: 8px;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-                margin-bottom: 20px;">
-                <h4>Chat With RAG</h4>
-                <p style='font-size: 24px; font-weight: bold;'> {total_cars(data, make2)}</p>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
 
     with col[-1]:
         fe_comparison_chart(data, make1, make2, VClass1, VClass2)
+    
+    col = st.columns((1, 1))
+    with col[1]:
+        group = st.selectbox('Select Group', list(groups.keys()))
+        sustainability_comparison_chart(data, make1, make2, VClass1, VClass2, group)
+
+    with col[0]:
+        st.write("")
 
     
 
-    
 
+def sustainability_comparison_chart(data, make1, make2, VClass1, VClass2, group):
+    groups = {
+        "Sustainability": {
+            "columns": ['co2', 'ghgScore', 'fuelType1', 'fuelType2'],
+            "weights": {'co2': 0.5, 'ghgScore': 0.4, 'fuelType1': 0.05, 'fuelType2': 0.05}
+        },
+        "Performance": {
+            "columns": ['cylinders', 'displ', 'drive', 'trany'],
+            "weights": {'cylinders': 0.4, 'displ': 0.4, 'drive': 0.1, 'trany': 0.1}
+        },
+        "Economy": {
+            "columns": ['comb08', 'barrels08', 'fuelCost08'],
+            "weights": {'comb08': 0.5, 'barrels08': 0.3, 'fuelCost08': 0.2}
+        },
+        "Mileage": {
+            "columns": ['comb08', 'range', 'barrels08'],
+            "weights": {'comb08': 0.4, 'range': 0.4, 'barrels08': 0.2}
+        },
+        "Cost": {
+            "columns": ['fuelCost08', 'fuelCostA08', 'youSaveSpend'],
+            "weights": {'fuelCost08': 0.4, 'fuelCostA08': 0.4, 'youSaveSpend': 0.2}
+        }
+    }
+
+    if group not in groups:
+        st.error(f"Invalid group selected: {group}. Please choose from {list(groups.keys())}.")
+        return
+
+    group_columns = groups[group]['columns']
+    group_weights = groups[group]['weights']
+
+    # Ensure all columns are numeric
+    for col in group_columns:
+        if col not in data.columns:
+            st.error(f"Missing column: {col}")
+            return
+        data[col] = pd.to_numeric(data[col], errors='coerce')
+
+    # Handle missing values (optional)
+    data.fillna(0, inplace=True)
+
+    # Compute weighted score
+    try:
+        data['Weighted Score'] = sum(
+            data[col] * group_weights[col] for col in group_columns
+        )
+    except TypeError as e:
+        st.error(f"Non-numeric data encountered in a column: {e}")
+        return
+
+    # Filter data
+    make1_data = data[(data['make'] == make1) & (data['VClass'] == VClass1)]
+    make2_data = data[(data['make'] == make2) & (data['VClass'] == VClass2)]
+
+    # Group data by year
+    make1_sustainability = make1_data.groupby('year')['Weighted Score'].mean()
+    make2_sustainability = make2_data.groupby('year')['Weighted Score'].mean()
+    overall_sustainability = data.groupby('year')['Weighted Score'].mean()
+
+    # Plotting
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.fill_between(overall_sustainability.index, overall_sustainability.values, color='#fcf5ea', alpha=0.3, label="Overall Sustainability")
+    ax.plot(make1_sustainability.index, make1_sustainability.values, label=f"{make1} - {VClass1}", marker='o', color='#85aa7e', linewidth=2)
+    ax.plot(make2_sustainability.index, make2_sustainability.values, label=f"{make2} - {VClass2}", marker='o', color='#ff8f88', linewidth=2)
+    ax.set_title(f"{group} Comparison by Year", fontsize=14, color='white')
+    ax.set_xlabel("Year", fontsize=12, color='white')
+    ax.set_ylabel("Average Weighted Score", fontsize=12, color='white')
+    ax.tick_params(axis='x', colors='white')
+    ax.tick_params(axis='y', colors='white')
+    ax.legend(facecolor='#393939', framealpha=0.9, edgecolor='white', labelcolor='white')
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['left'].set_color('white')
+    ax.spines['bottom'].set_color('white')
+    fig.patch.set_facecolor('#393939')
+    ax.set_facecolor('#393939')
+    st.pyplot(fig)
 
 
 
@@ -218,47 +306,6 @@ def fe_comparison_chart(data, make1, make2, VClass1, VClass2):
 def total_cars(data, make1):
     return( len(data[data['make'] == make1]))
 
-# def pie_chart(data, make1, make2, VClass1, VClass2):
-#     # Calculate totals
-#     total1 = len(data[data['make'] == make1])
-#     total2 = len(data[data['make'] == make2])
-#     total = len(data)
-#     total_class1 = len(data[(data['make'] == make1) & (data['assumed_VClass'] == VClass1)])
-#     total_class2 = len(data[(data['make'] == make2) & (data['assumed_VClass'] == VClass2)])
-
-#     # Data for the chart
-#     labels = [
-#         f"{make1} ({VClass1})",
-#         f"{make2} ({VClass2})",
-#         "Other Makes/Classes"
-#     ]
-#     sizes = [total_class1, total_class2, total - (total_class1 + total_class2)]
-#     colors = ['blue', 'purple', '#D1D5DB']  # Blue for make1, Purple for make2, bg-gray-300 equivalent
-
-#     # Create the pie chart with a hollow center
-#     fig, ax = plt.subplots(figsize=(6, 6))
-#     wedges, texts, autotexts = ax.pie(
-#         sizes,  
-#         autopct='%1.1f%%', 
-#         startangle=140,
-#         colors=colors,
-#         pctdistance=0.85,
-#         wedgeprops={'width': 0.3}  # Controls the width of the pie slices
-#     )
-
-#     # Formatting for a fully transparent background
-#     plt.axis('equal')  # Equal aspect ratio ensures the pie is drawn as a circle
-#     fig.patch.set_alpha(0)  # Makes the figure background fully transparent
-#     ax.set_facecolor("none")  # Makes the axes background fully transparent
-#     for spine in ax.spines.values():  # Remove axes borders
-#         spine.set_visible(False)
-
-#     # Remove ticks for a cleaner look
-#     ax.set_xticks([])
-#     ax.set_yticks([])
-
-#     # Display the pie chart in Streamlit
-#     st.pyplot(fig)
 
 
 import streamlit as st
