@@ -2,6 +2,7 @@ import streamlit as st
 from home import home_page
 from comparison import comparison_page
 
+
 st.set_page_config(
     page_title="US Population Dashboard",
     page_icon="🏂",
