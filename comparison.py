@@ -6,6 +6,18 @@ import requests
 from io import StringIO
 import plotly.graph_objects as go
 
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import MinMaxScaler, LabelEncoder
+from fpdf import FPDF
+import streamlit as st
+import requests
+import io
+import os
+from pinata_utils import upload_to_pinata
+
 def comparison_page():
     # Pinata IPFS CID and gateway URL
     ipfs_cid = "Qmaq97iYXo48jgCkHWCfYRWA7L1tfCX2JXvR71y8wnVRAh"  # Replace with your actual CID
@@ -135,7 +147,8 @@ def comparison_page():
     with col[-1]:
         fe_comparison_chart(data, make1, make2, VClass1, VClass2)
 
-    col = st.columns((1, 1))
+    
+
     
 
 
