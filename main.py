@@ -1,15 +1,16 @@
 import streamlit as st
-from home import home_page
-from comparison import comparison_page
-from analysis2 import analysis_page
-from an import create_pygwalker_viz
-
 st.set_page_config(
     page_title="US Population Dashboard",
     page_icon="🏂",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
+from home import home_page
+from comparison import comparison_page
+from analysis2 import analysis_page
+from an import create_pygwalker_viz
+
+
 
 # Sidebar for navigation
 st.sidebar.title("Navigation")
@@ -24,3 +25,5 @@ elif page == "Analysis":
     analysis_page()  # Call the function from analysis.py
 elif page == "Customizable Data":
     create_pygwalker_viz()  # Call the function from analysis.py
+
+    
