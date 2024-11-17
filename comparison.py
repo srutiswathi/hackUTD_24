@@ -90,7 +90,7 @@ def comparison_page():
             st.markdown(
                 f"""
                 <div style="
-                    background: linear-gradient(135deg, #393939, #1a1a1a);
+                    background: linear-gradient(135deg, #2b2d42, #3a3a3a);
                     color: white;
                     text-align: center;
                     padding: 20px;
@@ -110,7 +110,7 @@ def comparison_page():
             st.markdown(
                 f"""
                 <div style="
-                    background: linear-gradient(135deg, #393939, #1a1a1a, red);
+                    background: linear-gradient(135deg, #2b2d42, #3a3a3a);
                     color: white;
                     text-align: center;
                     padding: 20px;
@@ -131,7 +131,7 @@ def comparison_page():
             #     """
             #     <style>
             #     .chart-container {
-            #         background: linear-gradient(135deg, #393939, #1a1a1a, red);
+            #         background: linear-gradient(135deg, #2b2d42, #3a3a3a);
             #         border-radius: 8px;
             #         padding: 20px;
             #         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);

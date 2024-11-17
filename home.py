@@ -5,7 +5,7 @@ import altair as alt
 
 
 # Modular functions for HTML and CSS designs
-def styled_box_with_chart(title, chart, background_gradient="linear-gradient(135deg, #03233b, #143255)", text_color="white"):
+def styled_box_with_chart(title, chart, background_gradient="linear-gradient(135deg, #7a0000, #280000)", text_color="white"):
     """
     Generates a styled HTML box with a gradient background and includes a chart.
     Args:
@@ -21,11 +21,11 @@ def styled_box_with_chart(title, chart, background_gradient="linear-gradient(135
             background: {background_gradient};
             color: {text_color};
             text-align: center;
-            padding: 15px;
-            border: 2px solid #0d1b2a;  /* Navy blue border */
-            border-radius: 32px;       /* Rounded corners */
+            padding: 10px;
+            border: 3px solid #0d1b2a;  /* Navy blue border */
+            border-radius: 27px;       /* Rounded corners */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);  /* Subtle shadow */
-            margin-bottom: 15px;">
+            margin-bottom: 10px;">
             <h3>{title}</h3>
         </div>
         """,
@@ -158,16 +158,17 @@ def home_page():
         """
         <style>
         body {
-            background-color: #060f1a; /* Lighter gray background */
+            background: linear-gradient(195deg, #000000, #f32929); /* Gradient background */
             color: white;
         }
         .stApp {
-            background-color: #060f1a; /* Slightly lighter gray for the app background */
+            background: linear-gradient(185deg, #000000, #f32929); /* Gradient for the app background */
         }
         </style>
         """,
         unsafe_allow_html=True
-    )
+)
+
 
     st.title("Toyota Vehicle Dashboard")
     m1 = st.selectbox('Group by', ['assumed_VClass', 'baseModel'])
@@ -221,13 +222,13 @@ def home_page():
                 background: linear-gradient(135deg, #2b2d42, #3a3a3a);
                 color: white;
                 text-align: center;
-                padding: 20px;
+                padding: 10px;
                 border: 2px solid #0d1b2a;  /* Reduced border width */
                 border-radius: 32px;       /* Rounded corners */
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);  /* Subtle shadow */
                 width:100px; /* Adjusted box width */
                 max-width: 200px;          /* Maximum width of the container */
-                margin-bottom: 30px;">
+                margin-bottom: 10px;">
                 <h3>Distribution of {model_or_class(m1)}</h3>
             </div>
             """,
@@ -266,7 +267,7 @@ def home_page():
             color: white;
             text-align: center;
             padding: 20px;
-            border: 2px solid #0d1b2a;  /* Navy blue border */
+            border: 3px solid #0d1b2a;  /* Navy blue border */
             border-radius: 32px;       /* Rounded corners */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);  /* Subtle shadow */
             margin-bottom: 15px;">
@@ -282,11 +283,11 @@ def home_page():
     st.markdown(
         f"""
         <div style="
-            background: linear-gradient(135deg, #2b2d42, #3a3a3a);
+            background: linear-gradient(135deg,#2b2d42, #3a3a3a);
             color: white;
             text-align: center;
             padding: 20px;
-            border: 2px solid #0d1b2a;  /* Navy blue border */
+            border: 3px solid #0d1b2a;  /* Navy blue border */
             border-radius: 32px;       /* Rounded corners */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);  /* Subtle shadow */
             margin-bottom: 15px;">
@@ -305,7 +306,7 @@ def home_page():
             color: white;
             text-align: center;
             padding: 20px;
-            border: 2px solid #0d1b2a;  /* Navy blue border */
+            border: 3px solid #0d1b2a;  /* Navy blue border */
             border-radius: 32px;       /* Rounded corners */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);  /* Subtle shadow */
             margin-bottom: 15px;">
@@ -319,6 +320,5 @@ def home_page():
 
 if __name__ == "__main__":
     home_page()
-
 
 
