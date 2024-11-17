@@ -4,8 +4,6 @@ from comparison import comparison_page
 from analysis2 import analysis_page
 from an import create_pygwalker_viz
 
-
-
 st.set_page_config(
     page_title="US Population Dashboard",
     page_icon="🏂",

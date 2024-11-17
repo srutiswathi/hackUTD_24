@@ -3,12 +3,6 @@ import pandas as pd
 import altair as alt
 
 
-# st.set_page_config(
-#     page_title="US Population Dashboard",
-#     page_icon="🏂",
-#     layout="wide",
-#     initial_sidebar_state="collapsed",
-# )
 
 # Modular functions for HTML and CSS designs
 def styled_box_with_chart(title, chart, background_gradient="linear-gradient(135deg, #03233b, #143255)", text_color="white"):
