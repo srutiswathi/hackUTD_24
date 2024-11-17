@@ -27,7 +27,7 @@ def styled_box_with_chart(title, chart, background_gradient="linear-gradient(135
             background: {background_gradient};
             color: {text_color};
             text-align: center;
-            padding: 20px;
+            padding: 15px;
             border: 2px solid #0d1b2a;  /* Navy blue border */
             border-radius: 32px;       /* Rounded corners */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);  /* Subtle shadow */
@@ -232,8 +232,8 @@ def home_page():
                 border-radius: 32px;       /* Rounded corners */
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);  /* Subtle shadow */
                 width:100px; /* Adjusted box width */
-                max-width: 300px;          /* Maximum width of the container */
-                margin-bottom: 15px;">
+                max-width: 200px;          /* Maximum width of the container */
+                margin-bottom: 30px;">
                 <h3>Distribution of {model_or_class(m1)}</h3>
             </div>
             """,
@@ -244,11 +244,11 @@ def home_page():
     with col3:
     # Add space for alignment
         st.write(" ")  # Spacer
-        st.markdown("<div style='margin-left: 50px;'>", unsafe_allow_html=True)  # Add left margin
+        st.markdown("<div style='margin-left: 20px;'>", unsafe_allow_html=True)  # Add left margin
         st.image(
             "/Users/rujvi/Documents/hackUTD3_2024/hackUTD_24/Toyota Supra.png",
             caption="Toyota",
-            width=500  # Adjust width as needed
+            width=450  # Adjust width as needed
         )
         st.markdown("</div>", unsafe_allow_html=True)  # Close the div
 
